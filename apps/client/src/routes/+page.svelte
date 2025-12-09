@@ -17,19 +17,19 @@
 	function handleSearch(e: Event) {
 		e.preventDefault();
 		if (searchQuery.trim()) {
-			goto(`/kb/search?q=${encodeURIComponent(searchQuery.trim())}`);
+			goto(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
 		}
 	}
 
 	function navigateToArticle(slug: string | undefined) {
 		if (slug) {
-			goto(`/kb/${slug}`);
+			goto(`/${slug}`);
 		}
 	}
 
 	function navigateToCategory(slug: string | undefined) {
 		if (slug) {
-			goto(`/kb/category/${slug}`);
+			goto(`/category/${slug}`);
 		}
 	}
 

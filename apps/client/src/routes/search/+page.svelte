@@ -18,7 +18,7 @@
 	function handleSearch(e: Event) {
 		e.preventDefault();
 		if (searchQuery.trim()) {
-			goto(`/kb/search?q=${encodeURIComponent(searchQuery.trim())}`);
+			location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
 		}
 	}
 
@@ -69,7 +69,7 @@
 
 	function navigateToArticle(slug: string | undefined) {
 		if (slug) {
-			goto(`/kb/${slug}`);
+			goto(`/${slug}`);
 		}
 	}
 
@@ -95,7 +95,7 @@
 <main class="container mx-auto min-h-screen p-8">
 	<!-- Back Button -->
 	<div class="mb-6">
-		<Button variant="ghost" onclick={() => goto('/kb')} class="gap-2">
+		<Button variant="ghost" onclick={() => goto('/')} class="gap-2">
 			<ArrowLeft class="h-4 w-4" />
 			Back to Knowledgebase
 		</Button>

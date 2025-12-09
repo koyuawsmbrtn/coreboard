@@ -1,5 +1,5 @@
 import { type VariantProps, tv } from "tailwind-variants";
-import type { Button as ButtonPrimitive } from "bits-ui";
+type ButtonPrimitiveProps = Record<string, unknown>;
 import Root from "./badge.svelte";
 
 const badgeVariants = tv({
@@ -21,7 +21,7 @@ const badgeVariants = tv({
 });
 
 type Variant = VariantProps<typeof badgeVariants>["variant"];
-type Props = ButtonPrimitive.Props & {
+type Props = ButtonPrimitiveProps & {
 	variant?: Variant;
 };
 

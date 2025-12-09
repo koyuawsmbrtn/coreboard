@@ -80,7 +80,7 @@ export default defineConfig({
             },
             {
               title: 'Knowledgebase',
-              value: '/kb',
+              value: '/',
             },
             {
               title: 'Blog',
