@@ -79,7 +79,7 @@
 	</section>
 
 	<!-- Featured Articles -->
-	{#if knowledgebase?.showFeaturedArticles && featuredArticles.length > 0}
+	{#if featuredArticles && featuredArticles.length > 0}
 		<section class="mb-12">
 			<h2 class="mb-6 text-2xl font-bold flex items-center gap-2">
 				<TrendingUp class="h-6 w-6" />
@@ -131,7 +131,7 @@
 	{/if}
 
 	<!-- Categories Grid -->
-	{#if knowledgebase?.showCategories && categories.length > 0}
+	{#if categories && categories.length > 0}
 		<section>
 			<h2 class="mb-6 text-2xl font-bold flex items-center gap-2">
 				<BookOpen class="h-6 w-6" />

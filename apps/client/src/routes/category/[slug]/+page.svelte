@@ -108,7 +108,7 @@
 
 	<!-- Breadcrumbs -->
 	<nav class="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
-		<a href="/" class="hover:text-foreground">Home</a>
+		<a href="/" class="hover:text-foreground">Knowledgebase</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-foreground">{category.name}</span>
 	</nav>
