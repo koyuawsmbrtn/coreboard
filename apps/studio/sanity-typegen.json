@@ -1,0 +1,4 @@
+{
+  "generates": "../client/src/lib/sanity.types.ts",
+  "path": "./schemaTypes/*.ts"
+}

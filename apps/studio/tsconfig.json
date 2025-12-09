@@ -1,0 +1,5 @@
+{
+  "extends": "@repo/typescript-config/sanity.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

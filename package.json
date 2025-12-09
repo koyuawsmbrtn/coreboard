@@ -1,0 +1,32 @@
+{
+  "name": "web",
+  "private": true,
+  "scripts": {
+    "build": "nx run-many -t build",
+    "dev": "nx run-many -t dev",
+    "lint": "nx run-many -t lint",
+    "deploy": "nx run-many -t deploy",
+    "generate": "nx run-many -t generate",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check": "nx run-many -t check",
+    "update": "nx run-many -t update"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "5.9.2",
+    "nx": "21.3.11"
+  },
+  "engines": {
+    "bun": ">=1.2.12"
+  },
+  "packageManager": "bun@1.2.12",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "colorette": "^2.0.20",
+    "fs-extra": "^11.3.0"
+  }
+}
