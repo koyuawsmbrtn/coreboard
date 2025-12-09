@@ -34,7 +34,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import type { Settings } from '$lib/sanity.types';
 	import Logo from './logo.svelte';
-	import { MoreHorizontal, ChevronRight, User, LogIn, LogOut } from '@lucide/svelte';
+	import { MoreHorizontal, ChevronRight, User, LogIn, LogOut, Cog } from '@lucide/svelte';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import Button from './ui/button/button.svelte';
@@ -240,6 +240,12 @@
 								<Username name={user.name} />
 							</div>
 							<DropdownMenuSeparator />
+							<DropdownMenuItem onclick={() => {
+								location.href = 'https://accounts.iisu.network'; // Change this URL to your account settings page
+							}} class="cursor-pointer">
+								<Cog size={16} class="mr-2" />
+								Settings
+							</DropdownMenuItem>
 							<DropdownMenuItem onclick={handleLogout} class="cursor-pointer">
 								<LogOut size={16} class="mr-2" />
 								Log out
