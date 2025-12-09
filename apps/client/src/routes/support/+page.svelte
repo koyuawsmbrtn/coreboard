@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { ChevronLeft, ChevronRight, CheckCircle2, LogIn, SkipForward } from '@lucide/svelte';
 	import type { PageData } from './$types';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	let { data }: { data: PageData } = $props();
 	
@@ -25,7 +26,7 @@
 	});
 
 	function handleLogin() {
-		location.href = `https://accounts.iisu.network/auth?redirect=${encodeURIComponent(location.origin + '/callback')}`;
+		location.href = `${PUBLIC_BASE_URL}/auth?redirect=${encodeURIComponent(location.origin + '/callback')}`;
 	}
 
 	function skipLogin() {

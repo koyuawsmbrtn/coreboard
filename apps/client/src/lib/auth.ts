@@ -1,7 +1,8 @@
 import { createAuthClient } from "better-auth/svelte";
+import { PUBLIC_BASE_URL } from "$env/static/public";
 
 export const authClient = createAuthClient({
-    baseURL: "https://accounts.iisu.network", // Change base URL
+    baseURL: PUBLIC_BASE_URL,
     fetchOptions: {
         auth: {
             type: "Bearer",
@@ -11,7 +12,7 @@ export const authClient = createAuthClient({
 });
 
 export const getBadges = async () => {
-    const response = await fetch("https://accounts.iisu.network/me/badges", {
+    const response = await fetch(`${PUBLIC_BASE_URL}/me/badges`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

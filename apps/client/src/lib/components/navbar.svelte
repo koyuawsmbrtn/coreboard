@@ -12,6 +12,7 @@
 </script>
 
 <script lang="ts">
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import {
 		NavigationMenuContent,
 		NavigationMenuItem,
@@ -139,7 +140,7 @@
 	}
 
 	function handleLogin() {
-		location.href = `https://accounts.iisu.network/auth?redirect=${encodeURIComponent(location.origin + '/callback')}`;
+		location.href = `${PUBLIC_BASE_URL}/auth?redirect=${encodeURIComponent(location.origin + '/callback')}`;
 	}
 
 	async function handleLogout() {
@@ -241,7 +242,7 @@
 							</div>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onclick={() => {
-								location.href = 'https://accounts.iisu.network'; // Change this URL to your account settings page
+								location.href = `${PUBLIC_BASE_URL}/account`;
 							}} class="cursor-pointer">
 								<Cog size={16} class="mr-2" />
 								Settings
