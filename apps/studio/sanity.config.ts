@@ -27,16 +27,6 @@ export default defineConfig({
               .title('Settings')
               .icon(WrenchIcon)
               .child(S.document().schemaType('settings').documentId('settings').title('Settings')),
-            S.listItem()
-              .title('Navbar')
-              .icon(MenuIcon)
-              .child(S.document().schemaType('navbar').documentId('navbar').title('Navbar')),
-            S.divider(),
-            S.listItem()
-              .title('Landing Page')
-              .icon(HomeIcon)
-              .child(S.document().schemaType('home').documentId('home').title('Home')),
-            S.divider(),
             // Knowledgebase Section
             S.listItem()
               .title('Knowledgebase Settings')
@@ -54,15 +44,6 @@ export default defineConfig({
               .title('Tags')
               .icon(TagIcon)
               .child(S.documentTypeList('tag').title('Tags')),
-            S.divider(),
-            S.listItem()
-              .title('Custom pages')
-              .icon(ClipboardIcon)
-              .child(S.documentTypeList('custom').title('Content')),
-            S.listItem()
-              .title('Blog')
-              .icon(EditIcon)
-              .child(S.documentTypeList('blog').title('Blog')),
           ]),
     }),
     // @ts-ignore

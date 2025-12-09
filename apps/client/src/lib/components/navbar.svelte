@@ -34,10 +34,19 @@
 	import { cubicOut } from 'svelte/easing';
 	import type { Settings } from '$lib/sanity.types';
 	import Logo from './logo.svelte';
-	import { MoreHorizontal, ChevronDown, ChevronRight } from '@lucide/svelte';
+	import { MoreHorizontal, ChevronRight, User, LogIn, LogOut } from '@lucide/svelte';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import Button from './ui/button/button.svelte';
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuSeparator,
+		DropdownMenuTrigger
+	} from '$lib/components/ui/dropdown-menu';
+	import { authClient } from '$lib/auth';
+	import Username from './username.svelte';
 
 	interface Props {
 		settings?: Settings;
@@ -50,6 +59,13 @@
 	let navigationList: HTMLElement;
 	let mobileMenuOpen = $state(false);
 	let expandedSubmenu = $state<string | null>(null);
+	let user = $state<any>(null);
+
+	onMount(async () => {
+		const session = await authClient.getSession();
+		user = session.data?.user;
+		setTimeout(updateIndicator, 200);
+	});
 
 	const indicatorPosition = tweened(
 		{ left: 0, width: 0 },
@@ -102,10 +118,6 @@
 		}
 	}
 
-	onMount(() => {
-		setTimeout(updateIndicator, 200);
-	});
-
 	function closeMobileMenu() {
 		mobileMenuOpen = false;
 		expandedSubmenu = null;
@@ -124,6 +136,15 @@
 		return reloadPaths.some(path => 
 			url.startsWith(path) && currentPath.startsWith(path)
 		);
+	}
+
+	function handleLogin() {
+		location.href = `https://accounts.iisu.network/auth?redirect=${encodeURIComponent(location.origin + '/callback')}`;
+	}
+
+	async function handleLogout() {
+		await authClient.signOut();
+		location.reload();
 	}
 </script>
 
@@ -206,7 +227,35 @@
 					</div>
 				</NavigationMenuRoot>
 			</div>
-			<div class="ml-auto md:hidden">
+			
+			<!-- Desktop User Menu -->
+			<div class="ml-auto hidden md:block">
+				<DropdownMenu>
+					<DropdownMenuTrigger class="text-white hover:text-white/80 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md p-2">
+						<User size={20} />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end" class="w-48">
+						{#if user}
+							<div class="px-2 py-1.5 text-sm font-medium">
+								<Username name={user.name} />
+							</div>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem onclick={handleLogout} class="cursor-pointer">
+								<LogOut size={16} class="mr-2" />
+								Log out
+							</DropdownMenuItem>
+						{:else}
+							<DropdownMenuItem onclick={handleLogin} class="cursor-pointer">
+								<LogIn size={16} class="mr-2" />
+								Log in
+							</DropdownMenuItem>
+						{/if}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+
+			<!-- Mobile Menu Toggle -->
+			<div class="ml-2 md:hidden">
 				<Sheet bind:open={mobileMenuOpen}>
 					<SheetTrigger class="text-white md:hidden" aria-label="Toggle mobile menu">
 						<Button variant="ghost" size="icon">
@@ -302,6 +351,32 @@
 									</div>
 								{/if}
 							{/each}
+							
+							<!-- Mobile User Section -->
+							<div class="border-t border-white/20 mt-4 pt-4 px-4">
+								{#if user}
+									<div class="mb-2 text-sm font-medium">
+										{user.name || 'User'}
+									</div>
+									<Button
+										onclick={handleLogout}
+										variant="ghost"
+										class="w-full justify-start text-sm"
+									>
+										<LogOut size={16} class="mr-2" />
+										Log out
+									</Button>
+								{:else}
+									<Button
+										onclick={handleLogin}
+										variant="ghost"
+										class="w-full justify-start text-sm"
+									>
+										<LogIn size={16} class="mr-2" />
+										Log in
+									</Button>
+								{/if}
+							</div>
 						</div>
 					</SheetContent>
 				</Sheet>

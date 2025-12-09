@@ -13,6 +13,13 @@ interface PageResult {
 }
 
 export async function fetchNavigation(): Promise<NavigationItem[]> {
+	return [
+		{ name: 'Knowledgebase', url: '/' },
+		{ name: 'Contact support', url: '/support' },
+		{ name: 'Control panel', url: '/dashboard' }
+	];
+
+	// Legacy code for dynamic navigation fetching from Sanity
 	try {
 		const navbar = await serverClient.fetch<Navbar>(`
 			*[_type == "navbar"][0]{
@@ -43,9 +50,9 @@ export async function fetchNavigation(): Promise<NavigationItem[]> {
 		if (!navbar?.links || navbar.links.length === 0) {
 			// Return fallback navigation when no navbar document exists
 			return [
-				{ name: 'Home', url: '/' },
-				{ name: 'About', url: '/about' },
-				{ name: 'Contact', url: '/contact' }
+				{ name: 'Knowledgebase', url: '/' },
+				{ name: 'Contact support', url: '/support' },
+				{ name: 'Control panel', url: '/dashboard' }
 			];
 		}
 

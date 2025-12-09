@@ -9,3 +9,19 @@ export const authClient = createAuthClient({
         },
     },
 });
+
+export const getBadges = async () => {
+    const response = await fetch("https://accounts.iisu.network/me/badges", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch badges");
+    }
+
+    return (await response.json()).badges as string[];
+};

@@ -6,7 +6,7 @@
         const code = params.get('code');
         if (code) {
             localStorage.setItem('auth_token', code);
-            window.location.href = '/';
+            window.location.href = '/support';
         }
     });
 </script>
