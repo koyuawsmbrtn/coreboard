@@ -44,6 +44,10 @@ export default defineConfig({
               .title('Tags')
               .icon(TagIcon)
               .child(S.documentTypeList('tag').title('Tags')),
+            S.listItem()
+              .title('Support Questions')
+              .icon(EditIcon)
+              .child(S.documentTypeList('supportQuestion').title('Support Questions')),
           ]),
     }),
     // @ts-ignore

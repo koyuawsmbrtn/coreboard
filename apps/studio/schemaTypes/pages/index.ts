@@ -5,3 +5,4 @@ export { default as blog } from "./blog";
 export { default as article } from "./article";
 export { default as category } from "./category";
 export { default as knowledgebase } from "./knowledgebase";
+export { default as supportQuestion } from "./supportQuestion";

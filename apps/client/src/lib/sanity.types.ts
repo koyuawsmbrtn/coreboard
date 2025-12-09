@@ -13,6 +13,23 @@
  */
 
 // Source: schema.json
+export type SupportQuestion = {
+	_id: string;
+	_type: 'supportQuestion';
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	question?: string;
+	order?: number;
+	options?: Array<{
+		label?: string;
+		value?: string;
+		_key: string;
+	}>;
+	required?: boolean;
+	active?: boolean;
+};
+
 export type Knowledgebase = {
 	_id: string;
 	_type: 'knowledgebase';
@@ -578,6 +595,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+	| SupportQuestion
 	| Knowledgebase
 	| Home
 	| CtaSection
