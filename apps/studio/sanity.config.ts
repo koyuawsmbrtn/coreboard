@@ -1,6 +1,6 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import {ClipboardIcon, EditIcon, HomeIcon, MenuIcon, WrenchIcon, SearchIcon, DocumentTextIcon, FolderIcon, TagIcon} from '@sanity/icons'
+import {ClipboardIcon, EditIcon, WrenchIcon, SearchIcon, DocumentTextIcon, FolderIcon, TagIcon} from '@sanity/icons'
 import {schemaTypes} from './schemaTypes'
 import {presentationTool} from 'sanity/presentation'
 import {linkField} from 'sanity-plugin-link-field'
@@ -10,7 +10,8 @@ import {createColorList} from './lib/colorUtils'
 import {sanityConnection} from '@repo/sanity-connection'
 import Logo from './components/logo'
 
-export default defineConfig({
+// Explicitly type as 'any' to avoid PluginOptions type error
+const config: any = defineConfig({
   name: 'default',
   title: sanityConnection.pageTitle,
   projectId: sanityConnection.projectId,
@@ -97,3 +98,5 @@ export default defineConfig({
     types: schemaTypes,
   },
 })
+
+export default config
