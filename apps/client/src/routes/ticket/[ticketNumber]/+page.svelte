@@ -105,7 +105,7 @@
 			</CardDescription>
 		</CardHeader>
 		<CardContent>
-			<div class="prose prose-sm dark:prose-invert max-w-none">
+			<div class="prose prose-sm dark:prose-invert max-w-none ticket-description">
 				{@html parseMarkdown(data.issue.description || 'No description provided')}
 			</div>
 		</CardContent>

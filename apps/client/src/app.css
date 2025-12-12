@@ -164,3 +164,7 @@ main {
 .prose ol {
 	@apply list-decimal pl-6 my-2;
 }
+
+.ticket-description img {
+	display: none;
+}

@@ -50,7 +50,7 @@ export const actions: Actions = {
 						const fileData = JSON.parse(stringValue);
 						if (fileData.name && fileData.data) {
 							// It's a file with base64 data
-							description += `**${key}**: ${fileData.name}:\n\n![${fileData.name}](${fileData.data})\n\n`;
+							description += `**${key}**: ${fileData.name}\n\n![${fileData.name}](${fileData.data})\n\n`;
 							linearAttachments.push({ name: fileData.name, url: fileData.data });
 						} else {
 							// Regular answer
