@@ -29,6 +29,8 @@
     "@lucide/svelte": "^0.556.0",
     "colorette": "^2.0.20",
     "fs-extra": "^11.3.0",
-    "prisma": "^7.1.0"
+    "mdsvex": "^0.12.6",
+    "prisma": "^7.1.0",
+    "svelte-adapter-bun": "^1.0.1"
   }
 }
