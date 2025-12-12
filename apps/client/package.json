@@ -17,6 +17,8 @@
 	"dependencies": {
 		"@linear/sdk": "^65.2.0",
 		"@portabletext/svelte": "^3.0.0",
+		"@prisma/adapter-pg": "^7.1.0",
+		"@prisma/client": "^7.1.0",
 		"@repo/sanity-connection": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
 		"@repo/ui": "workspace:*",
@@ -26,6 +28,8 @@
 		"@sanity/visual-editing": "^3.0.2",
 		"@sveltejs/adapter-cloudflare-workers": "^2.9.0",
 		"better-auth": "^1.4.5",
+		"marked": "^17.0.1",
+		"resend": "^6.6.0",
 		"zod": "^4.1.0"
 	},
 	"devDependencies": {

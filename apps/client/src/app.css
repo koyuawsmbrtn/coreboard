@@ -140,3 +140,19 @@
 		-webkit-line-clamp: 3;
 	}
 }
+
+h1 {
+	@apply text-3xl font-bold mb-4;
+}
+
+h2 {
+	@apply text-2xl font-semibold mb-3;
+}
+
+h3 {
+	@apply text-xl font-semibold mb-2;
+}
+
+main {
+	@apply p-4;
+}

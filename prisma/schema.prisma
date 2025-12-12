@@ -13,21 +13,11 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id        String   @id @default(cuid())
-  
-  tickets   Ticket[]
-  
-  @@map("users")
-}
-
 model Ticket {
   id            String   @id @default(cuid())
   ticketNumber  String   @unique @default(cuid()) // Non-guessable ticket number
   linearId      String?  @unique // Linear issue ID
-  
-  userId        String?
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String?  // External user ID from better-auth (no foreign key)
   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

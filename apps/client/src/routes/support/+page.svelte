@@ -6,6 +6,7 @@
 	import { ChevronLeft, ChevronRight, CheckCircle2, LogIn, SkipForward } from '@lucide/svelte';
 	import type { PageData } from './$types';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
+	import { enhance } from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
 	
@@ -16,6 +17,8 @@
 	let submitted = $state(false);
 	let guestEmail = $state('');
 	let skippedLogin = $state(false);
+	let ticketNumber = $state('');
+	let isSubmitting = $state(false);
 
 	const steps = ['login', 'email', ...data.questions.map((_: any, i: any) => `question-${i}`), 'complete'];
 
@@ -80,36 +83,6 @@
             files[questionId] = file;
         }
     }
-
-	async function submitSupport() {
-		// Here you would typically send the data to your backend
-		// For file uploads, you would need to use FormData
-		const formData = new FormData();
-		formData.append('user', user?.email || guestEmail || 'anonymous');
-		
-		// Add text answers
-		Object.keys(answers).forEach(key => {
-			if (!files[key]) {
-				formData.append(key, answers[key]);
-			}
-		});
-		
-		// Add files
-		Object.keys(files).forEach(key => {
-			if (files[key]) {
-				formData.append(key, files[key]!);
-			}
-		});
-		
-		console.log('Support request submitted:', {
-			user: user?.email || guestEmail || 'anonymous',
-			answers,
-			files: Object.keys(files).filter(k => files[k])
-		});
-		
-		submitted = true;
-		nextStep();
-	}
 
     function canProceed() {
 		if (currentStep === 0) return false; // Login step, must use buttons
@@ -282,33 +255,24 @@
 			</CardHeader>
 			<CardContent class="space-y-4">
 				<div class="rounded-lg bg-green-50 dark:bg-green-900/20 p-4">
-					<h3 class="font-semibold text-green-800 dark:text-green-300 mb-2">Your Responses:</h3>
-					<div class="space-y-2 text-sm">
-						{#each data.questions as question}
-							{#if answers[question._id]}
-								<div>
-									<p class="font-medium text-green-700 dark:text-green-400">{question.question}</p>
-									<p class="text-green-600 dark:text-green-500">
-										{#if question.type === 'multiple-choice'}
-											{question.options?.find((opt: { value: any; }) => opt.value === answers[question._id])?.label || answers[question._id]}
-										{:else if question.type === 'file'}
-											📎 {files[question._id]?.name || answers[question._id]}
-										{:else}
-											{answers[question._id]}
-										{/if}
-									</p>
-								</div>
-							{/if}
-						{/each}
-					</div>
+					<h3 class="font-semibold text-green-800 dark:text-green-300 mb-2">Ticket Created!</h3>
+					<p class="text-sm text-green-700 dark:text-green-400 mb-2">
+						Your ticket number is: <strong class="text-lg">#{ticketNumber}</strong>
+					</p>
+					<a 
+						href="/ticket/{ticketNumber}"
+						class="inline-block mt-2 text-sm font-medium text-primary hover:underline"
+					>
+						View your ticket →
+					</a>
 				</div>
 				{#if user}
 					<p class="text-sm text-muted-foreground">
-						We'll send updates to <strong>{user.email}</strong>
+						We've sent a confirmation email to <strong>{user.email}</strong>
 					</p>
 				{:else if guestEmail}
 					<p class="text-sm text-muted-foreground">
-						We'll send updates to <strong>{guestEmail}</strong>
+						We've sent a confirmation email to <strong>{guestEmail}</strong>
 					</p>
 				{:else}
 					<p class="text-sm text-muted-foreground">
@@ -440,15 +404,42 @@
 						<ChevronLeft class="mr-2 h-4 w-4" />
 						Back
 					</Button>
-					{#if currentStep === data.questions.length}
-						<Button
-							onclick={submitSupport}
-							disabled={question.required && !answers[question._id]}
-							class="flex-1"
-						>
-							Submit Support Request
-							<CheckCircle2 class="ml-2 h-4 w-4" />
-						</Button>
+					{#if currentStep === steps.length - 2}
+						<!-- Last question - show submit button -->
+						<form method="POST" class="flex-1" use:enhance={() => {
+							isSubmitting = true;
+							return async ({ result, update }) => {
+								if (result.type === 'success') {
+									ticketNumber = String((result.data as { ticketNumber: string })?.ticketNumber ?? '');
+									submitted = true;
+									await update();
+									nextStep();
+								} else if (result.type === 'failure') {
+									alert(result.data?.error || 'Failed to submit support request');
+								}
+								isSubmitting = false;
+							};
+						}}>
+							<input type="hidden" name="user" value={user?.email || guestEmail || 'anonymous'} />
+							{#if user?.id}
+								<input type="hidden" name="userId" value={user.id} />
+							{/if}
+							{#each Object.keys(answers) as key}
+								{#if !files[key]}
+									{@const question = data.questions.find((q: any) => q._id === key)}
+									{@const label = question?.question || key}
+									<input type="hidden" name={label} value={answers[key]} />
+								{/if}
+							{/each}
+							<Button
+								type="submit"
+								disabled={(question.required && !answers[question._id]) || isSubmitting}
+								class="w-full"
+							>
+								{isSubmitting ? 'Submitting...' : 'Submit Support Request'}
+								<CheckCircle2 class="ml-2 h-4 w-4" />
+							</Button>
+						</form>
 					{:else}
 						<Button
 							onclick={nextStep}

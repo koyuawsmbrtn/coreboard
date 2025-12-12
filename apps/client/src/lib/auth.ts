@@ -1,5 +1,6 @@
 import { createAuthClient } from "better-auth/svelte";
 import { PUBLIC_BASE_URL } from "$env/static/public";
+import { username } from "better-auth/plugins"
 
 export const authClient = createAuthClient({
     baseURL: PUBLIC_BASE_URL,
@@ -9,6 +10,7 @@ export const authClient = createAuthClient({
             token: () => localStorage.getItem("auth_token") || "",
         },
     },
+    plugins: [username()],
 });
 
 export const getBadges = async () => {
