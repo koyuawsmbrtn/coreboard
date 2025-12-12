@@ -27,7 +27,10 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 # then copy all (non-ignored) project files into the image
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
-COPY . .
+COPY nx.json package.json tsconfig.base.json ./
+COPY packages ./packages
+COPY apps/client ./apps/client
+COPY prisma ./prisma
 
 # Generate Prisma client
 RUN bunx prisma generate
@@ -35,19 +38,19 @@ RUN bunx prisma generate
 # Copy .env file for build-time environment variables
 COPY .env .env
 
-# Build the app using environment variables from .env
+# Build the client app using environment variables from .env
 ENV NODE_ENV=production
-RUN bun run build
+RUN bunx nx run client:build
 
 # Copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/node_modules/.prisma node_modules/.prisma
-COPY --from=prerelease /usr/src/app/build build
+COPY --from=prerelease /usr/src/app/apps/client/build apps/client/build
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/prisma prisma
-COPY --from=prerelease /usr/src/app/static static
-COPY --from=prerelease /usr/src/app/scripts scripts
+COPY --from=prerelease /usr/src/app/apps/client/static apps/client/static
+COPY --from=prerelease /usr/src/app/apps/client/package.json apps/client/package.json
 # NOTE: .env is not copied to final image - docker-compose provides environment variables
 
 # Copy entrypoint script
@@ -72,4 +75,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Set entrypoint and command
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["bun", "run", "build/index.js"]
+CMD ["bun", "run", "apps/client/build/index.js"]
