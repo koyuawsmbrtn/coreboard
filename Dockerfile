@@ -82,10 +82,6 @@ EXPOSE 3002/tcp
 ENV NODE_ENV=production
 ENV PORT=3002
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3002/ || exit 1
-
 # Set entrypoint and command
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["bun", "run", "apps/client/build/index.js"]
