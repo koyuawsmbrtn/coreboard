@@ -14,14 +14,16 @@
 	let answers = $state<Record<string, any>>({});
 	let files = $state<Record<string, File | null>>({});
 	let submitted = $state(false);
+	let guestEmail = $state('');
+	let skippedLogin = $state(false);
 
-	const steps = ['login', ...data.questions.map((_: any, i: any) => `question-${i}`), 'complete'];
+	const steps = ['login', 'email', ...data.questions.map((_: any, i: any) => `question-${i}`), 'complete'];
 
 	onMount(async () => {
 		const session = await authClient.getSession();
 		user = session.data?.user;
 		if (user) {
-			currentStep = 1; // Skip login if already logged in
+			currentStep = 2; // Skip login and email if already logged in
 		}
 	});
 
@@ -30,7 +32,8 @@
 	}
 
 	function skipLogin() {
-		currentStep = 1;
+		skippedLogin = true;
+		currentStep = 1; // Go to email step
 	}
 
 	function nextStep() {
@@ -42,9 +45,13 @@
 	function prevStep() {
 		if (currentStep > 0) {
 			currentStep--;
-			// Skip login step if going back and user is logged in
+			// Skip email step if going back and user is logged in
+			if (currentStep === 1 && user) {
+				currentStep = 0;
+			}
+			// Skip login step if going back from email and user is logged in
 			if (currentStep === 0 && user) {
-				currentStep = 1;
+				currentStep = 2;
 			}
 		}
 	}
@@ -78,7 +85,7 @@
 		// Here you would typically send the data to your backend
 		// For file uploads, you would need to use FormData
 		const formData = new FormData();
-		formData.append('user', user?.email || 'anonymous');
+		formData.append('user', user?.email || guestEmail || 'anonymous');
 		
 		// Add text answers
 		Object.keys(answers).forEach(key => {
@@ -95,7 +102,7 @@
 		});
 		
 		console.log('Support request submitted:', {
-			user: user?.email || 'anonymous',
+			user: user?.email || guestEmail || 'anonymous',
 			answers,
 			files: Object.keys(files).filter(k => files[k])
 		});
@@ -106,9 +113,10 @@
 
     function canProceed() {
 		if (currentStep === 0) return false; // Login step, must use buttons
+		if (currentStep === 1 && skippedLogin) return !!guestEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail); // Email validation
 		if (currentStep === steps.length - 1) return false; // Complete step
 		
-		const questionIndex = currentStep - 1;
+		const questionIndex = currentStep - 2; // Adjust for login and email steps
 		const question = data.questions[questionIndex];
 		
 		if (question?.required) {
@@ -119,8 +127,8 @@
 	}
 
 	function getCurrentQuestion() {
-		if (currentStep === 0 || currentStep === steps.length - 1) return null;
-		return data.questions[currentStep - 1];
+		if (currentStep === 0 || currentStep === 1 || currentStep === steps.length - 1) return null;
+		return data.questions[currentStep - 2]; // Adjust for login and email steps
 	}
 
 	$effect(() => {
@@ -148,10 +156,12 @@
 			<span class="text-muted-foreground">
 				{#if currentStep === 0}
 					Getting Started
+				{:else if currentStep === 1 && skippedLogin}
+					Email Address
 				{:else if currentStep === steps.length - 1}
 					Complete
 				{:else}
-					Question {currentStep} of {data.questions.length}
+					Question {currentStep - 1} of {data.questions.length}
 				{/if}
 			</span>
 			<span class="font-medium">
@@ -225,6 +235,40 @@
 					</Button>
 				{/if}
 			</CardFooter>
+		{:else if currentStep === 1 && skippedLogin}
+			<!-- Email Step (for guests) -->
+			<CardHeader>
+				<CardTitle>Your Email Address</CardTitle>
+				<CardDescription>
+					Please provide your email so we can respond to your support request
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<input
+					type="email"
+					class="w-full rounded-lg border-2 border-border p-3 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+					placeholder="your.email@example.com"
+					bind:value={guestEmail}
+					required
+				/>
+				{#if guestEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)}
+					<p class="mt-2 text-sm text-destructive">Please enter a valid email address</p>
+				{/if}
+			</CardContent>
+			<CardFooter class="flex gap-2">
+				<Button variant="outline" onclick={prevStep}>
+					<ChevronLeft class="mr-2 h-4 w-4" />
+					Back
+				</Button>
+				<Button
+					onclick={nextStep}
+					disabled={!guestEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)}
+					class="flex-1"
+				>
+					Continue
+					<ChevronRight class="ml-2 h-4 w-4" />
+				</Button>
+			</CardFooter>
 		{:else if currentStep === steps.length - 1}
 			<!-- Complete Step -->
 			<CardHeader>
@@ -262,6 +306,10 @@
 					<p class="text-sm text-muted-foreground">
 						We'll send updates to <strong>{user.email}</strong>
 					</p>
+				{:else if guestEmail}
+					<p class="text-sm text-muted-foreground">
+						We'll send updates to <strong>{guestEmail}</strong>
+					</p>
 				{:else}
 					<p class="text-sm text-muted-foreground">
 						To track this request, please sign in or check back here later.
@@ -279,7 +327,7 @@
 			{#if question}
 				<CardHeader>
 					<CardTitle>
-						Question {currentStep} of {data.questions.length}
+						Question {currentStep - 1} of {data.questions.length}
 					</CardTitle>
 					<CardDescription>
 						{question.question}
@@ -296,7 +344,7 @@
 									class="w-full rounded-lg border-2 p-4 text-left transition-all hover:border-primary hover:bg-accent {answers[question._id] === option.value
 										? 'border-primary bg-accent'
 										: 'border-border'}"
-									onclick={() => selectOption(currentStep - 1, option.value)}
+									onclick={() => selectOption(currentStep - 2, option.value)}
 								>
 									<div class="flex items-center gap-3">
 										<div
@@ -388,7 +436,7 @@
 					{/if}
 				</CardContent>
 				<CardFooter class="flex gap-2">
-					<Button variant="outline" onclick={prevStep} disabled={currentStep === 1 && !user}>
+					<Button variant="outline" onclick={prevStep} disabled={currentStep === 2 && !user && !skippedLogin}>
 						<ChevronLeft class="mr-2 h-4 w-4" />
 						Back
 					</Button>

@@ -16,7 +16,8 @@ export async function fetchNavigation(): Promise<NavigationItem[]> {
 	return [
 		{ name: 'Knowledgebase', url: '/' },
 		{ name: 'Contact support', url: '/support' },
-		{ name: 'Control panel', url: '/dashboard' }
+		// Disabled this for now until we have a proper dashboard for user management
+		// { name: 'Control panel', url: '/dashboard' }
 	];
 
 	// Legacy code for dynamic navigation fetching from Sanity
