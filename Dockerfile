@@ -32,11 +32,11 @@ COPY packages ./packages
 COPY apps/client ./apps/client
 COPY prisma ./prisma
 
+# Copy .env file for build-time environment variables (needed for Prisma generate)
+COPY .env .env
+
 # Generate Prisma client
 RUN bunx prisma generate
-
-# Copy .env file for build-time environment variables
-COPY .env .env
 
 # Build the client app using environment variables from .env
 ENV NODE_ENV=production
