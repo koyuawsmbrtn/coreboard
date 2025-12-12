@@ -2,6 +2,6 @@
 	let { children } = $props();
 </script>
 
-<p class="mb-4 leading-relaxed text-foreground">
+<p class="mb-4 leading-relaxed text-foreground prose">
 	{@render children()}
 </p>
