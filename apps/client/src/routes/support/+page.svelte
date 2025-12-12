@@ -68,7 +68,7 @@
 		answers[questionId] = value;
 	}
 
-	function handleFileUpload(questionId: string, event: Event) {
+	async function handleFileUpload(questionId: string, event: Event) {
 		const input = event.target as HTMLInputElement;
 		const file = input.files?.[0];
 		if (file) {
@@ -80,6 +80,14 @@
 				input.value = '';
                 return;
             }
+            
+            // Convert file to base64
+            const reader = new FileReader();
+            reader.onload = () => {
+            	const base64 = reader.result as string;
+            	answers[questionId] = JSON.stringify({ name: file.name, type: file.type, data: base64 });
+            };
+            reader.readAsDataURL(file);
             files[questionId] = file;
         }
     }
@@ -406,8 +414,8 @@
 					</Button>
 					{#if currentStep === steps.length - 2}
 						<!-- Last question - show submit button -->
-						<form method="POST" class="flex-1" use:enhance={() => {
-							isSubmitting = true;
+					<form method="POST" class="flex-1" use:enhance={() => {
+						isSubmitting = true;
 							return async ({ result, update }) => {
 								if (result.type === 'success') {
 									ticketNumber = String((result.data as { ticketNumber: string })?.ticketNumber ?? '');
@@ -425,11 +433,9 @@
 								<input type="hidden" name="userId" value={user.id} />
 							{/if}
 							{#each Object.keys(answers) as key}
-								{#if !files[key]}
-									{@const question = data.questions.find((q: any) => q._id === key)}
-									{@const label = question?.question || key}
-									<input type="hidden" name={label} value={answers[key]} />
-								{/if}
+							{@const question = data.questions.find((q: any) => q._id === key)}
+							{@const label = question?.question || key}
+							<input type="hidden" name={label} value={answers[key]} />
 							{/each}
 							<Button
 								type="submit"

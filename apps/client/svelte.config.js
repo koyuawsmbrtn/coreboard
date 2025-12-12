@@ -15,6 +15,7 @@ const config = {
       envPrefix: "",
       development: false,
     }),
+    version: { name: "0.0.2" },
   },
   extensions: [".svelte", ".svx"],
 };

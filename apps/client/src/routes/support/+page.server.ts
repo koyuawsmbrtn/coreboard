@@ -37,11 +37,29 @@ export const actions: Actions = {
 			const userEmail = formData.get('user') as string;
 			const userId = formData.get('userId') as string | null;
 
-			// Build issue description from answers
+			// Build issue description from answers and handle file uploads
 			let description = '';
+			const linearAttachments: { name: string; url: string }[] = [];
+
 			for (const [key, value] of formData.entries()) {
-				if (key !== 'user' && key !== 'userId' && typeof value === 'string') {
-					description += `**${key}**: ${value}\n\n`;
+				if (key !== 'user' && key !== 'userId') {
+					const stringValue = value as string;
+					
+					// Check if this is a base64 encoded file
+					try {
+						const fileData = JSON.parse(stringValue);
+						if (fileData.name && fileData.data) {
+							// It's a file with base64 data
+							description += `**${key}**: ${fileData.name}:\n\n![${fileData.name}](${fileData.data})\n\n`;
+							linearAttachments.push({ name: fileData.name, url: fileData.data });
+						} else {
+							// Regular answer
+							description += `**${key}**: ${stringValue}\n\n`;
+						}
+					} catch {
+						// Not JSON, treat as regular answer
+						description += `**${key}**: ${stringValue}\n\n`;
+					}
 				}
 			}
 
