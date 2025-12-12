@@ -32,11 +32,23 @@ COPY packages ./packages
 COPY apps/client ./apps/client
 COPY prisma ./prisma
 
-# Copy .env file for build-time environment variables (needed for Prisma generate)
-COPY .env .env
+# Accept build-time environment variables
+ARG DATABASE_URL
+ARG PUBLIC_BASE_URL
+ARG PUBLIC_ORIGIN_URL
+ARG LINEAR_API_KEY
+ARG RESEND_API_KEY
+ARG EMAIL_FROM
+ARG PUBLIC_SANITY_PAGE_TITLE
+ARG PUBLIC_SANITY_PUBLIC_VIEWER_TOKEN
+ARG PUBLIC_SANITY_STUDIO_HOST
+ARG PUBLIC_SANITY_STUDIO_URL
+ARG PUBLIC_SANITY_PROJECT_ID
+ARG PUBLIC_SANITY_PREVIEW_URL
+ARG PUBLIC_SANITY_DATASET
 
-# Generate Prisma client (load env vars from .env file)
-RUN set -a && . ./.env && set +a && bunx prisma generate
+# Generate Prisma client
+RUN bunx prisma generate
 
 # Build the client app using environment variables from .env
 ENV NODE_ENV=production
