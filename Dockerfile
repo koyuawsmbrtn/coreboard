@@ -51,6 +51,7 @@ COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/prisma prisma
 COPY --from=prerelease /usr/src/app/apps/client/static apps/client/static
 COPY --from=prerelease /usr/src/app/apps/client/package.json apps/client/package.json
+COPY --from=prerelease /usr/src/app/prisma.config.ts prisma.config.ts
 # NOTE: .env is not copied to final image - docker-compose provides environment variables
 
 # Copy entrypoint script
