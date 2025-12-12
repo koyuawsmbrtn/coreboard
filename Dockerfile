@@ -10,11 +10,17 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
+COPY packages /temp/dev/packages
+COPY apps/client/package.json /temp/dev/apps/client/package.json
+COPY apps/studio/package.json /temp/dev/apps/studio/package.json
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 # Install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
 COPY package.json bun.lock /temp/prod/
+COPY packages /temp/prod/packages
+COPY apps/client/package.json /temp/prod/apps/client/package.json
+COPY apps/studio/package.json /temp/prod/apps/studio/package.json
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # Copy node_modules from temp directory
