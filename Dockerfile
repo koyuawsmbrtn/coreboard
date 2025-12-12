@@ -27,7 +27,7 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 # then copy all (non-ignored) project files into the image
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
-COPY nx.json package.json tsconfig.base.json ./
+COPY nx.json package.json tsconfig.base.json prisma.config.ts ./
 COPY packages ./packages
 COPY apps/client ./apps/client
 COPY prisma ./prisma
@@ -49,9 +49,9 @@ COPY --from=prerelease /usr/src/app/generated/prisma generated/prisma
 COPY --from=prerelease /usr/src/app/apps/client/build apps/client/build
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/prisma prisma
+COPY --from=prerelease /usr/src/app/prisma.config.ts prisma.config.ts
 COPY --from=prerelease /usr/src/app/apps/client/static apps/client/static
 COPY --from=prerelease /usr/src/app/apps/client/package.json apps/client/package.json
-COPY --from=prerelease /usr/src/app/prisma.config.ts prisma.config.ts
 # NOTE: .env is not copied to final image - docker-compose provides environment variables
 
 # Copy entrypoint script
