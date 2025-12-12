@@ -45,7 +45,7 @@ RUN bunx nx run client:build
 # Copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/node_modules/.prisma node_modules/.prisma
+COPY --from=prerelease /usr/src/app/generated/prisma generated/prisma
 COPY --from=prerelease /usr/src/app/apps/client/build apps/client/build
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/prisma prisma
