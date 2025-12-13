@@ -66,15 +66,15 @@
 		return pages;
 	}
 
-	function navigateToArticle(slug: string | undefined) {
+	async function navigateToArticle(slug: string | undefined) {
 		if (slug) {
-			goto(`/${slug}`);
+			await goto(`/${slug}`);
 		}
 	}
 
-	function navigateToCategory(slug: string | undefined) {
+	async function navigateToCategory(slug: string | undefined) {
 		if (slug) {
-			goto(`/category/${slug}`);
+			await goto(`/category/${slug}`);
 		}
 	}
 

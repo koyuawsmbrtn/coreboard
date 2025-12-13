@@ -73,7 +73,7 @@
 		}
 	}
 
-	function getDifficultyColor(difficulty: string | undefined) {
+	function getDifficultyColor(difficulty: string): string {
 		switch (difficulty) {
 			case 'beginner':
 				return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';

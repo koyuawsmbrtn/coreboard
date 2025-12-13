@@ -64,7 +64,7 @@
 		}
 	}
 
-	function getDifficultyColor(difficulty: string | undefined) {
+	function getDifficultyColor(difficulty: string): string {
 		switch (difficulty) {
 			case 'beginner':
 				return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
@@ -153,7 +153,7 @@
 							</div>
 							{#if article.tags && article.tags.length > 1}
 								<div class="mt-3 flex flex-wrap gap-1">
-									{#each article.tags.filter(t => t.slug?.current !== tag.slug?.current).slice(0, 3) as otherTag}
+									{#each article.tags.filter((t: typeof article.tags[0]) => t.slug?.current !== tag.slug?.current).slice(0, 3) as otherTag}
 										<Badge variant="secondary" class="text-xs">
 											{otherTag.name}
 										</Badge>

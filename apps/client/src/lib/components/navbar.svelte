@@ -261,13 +261,11 @@
 				</DropdownMenu>
 			</div>
 
-			<!-- Mobile Menu Toggle -->
-			<div class="ml-2 md:hidden">
-				<Sheet bind:open={mobileMenuOpen}>
-					<SheetTrigger class="text-white md:hidden" aria-label="Toggle mobile menu">
-						<Button variant="ghost" size="icon">
-							<MoreHorizontal size={24} />
-						</Button>
+		<!-- Mobile Menu Toggle -->
+		<div class="ml-auto md:hidden">
+			<Sheet bind:open={mobileMenuOpen}>
+				<SheetTrigger class="text-white focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md p-2 hover:bg-white/10 transition-colors" aria-label="Toggle mobile menu">
+					<MoreHorizontal size={24} />
 					</SheetTrigger>
 					<SheetContent side="top" class="border-primary bg-primary h-full w-full text-white">
 						<SheetHeader class="border-b border-white/20 pb-4">

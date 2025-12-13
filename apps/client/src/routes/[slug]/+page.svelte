@@ -93,7 +93,7 @@
 		<a href="/" class="hover:text-foreground">Knowledgebase</a>
 		{#if article.category}
 			<ChevronRight class="h-4 w-4" />
-			<button onclick={() => navigateToCategory(article.category.slug?.current)} class="hover:text-foreground">
+			<button onclick={() => navigateToCategory(article.category.slug?.current)} class="hover:text-foreground cursor-pointer">
 				{article.category.name}
 			</button>
 		{/if}
@@ -124,7 +124,7 @@
 			<h1 class="mb-4 text-4xl font-bold md:text-5xl">{article.title}</h1>
 
 			{#if article.excerpt}
-				<p class="mb-6 text-xl text-muted-foreground break-all">{article.excerpt}</p>
+				<p class="mb-6 text-xl text-muted-foreground">{article.excerpt}</p>
 			{/if}
 
 			<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
@@ -161,7 +161,7 @@
 		{/if}
 
 		<!-- Content -->
-		<div class="prose prose-lg dark:prose-invert mx-auto mb-8 max-w-none break-all">
+		<div class="prose prose-lg dark:prose-invert mx-auto mb-8 max-w-none">
 			{#if article.body}
 				<SanityBlock body={article.body} />
 			{/if}
