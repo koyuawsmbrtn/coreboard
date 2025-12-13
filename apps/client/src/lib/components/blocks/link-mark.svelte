@@ -6,10 +6,10 @@
 </script>
 
 <Button 
-	href={value.href} 
+	href={value.href.url} 
 	variant="link"
-	target={value.blank ? '_blank' : '_self'}
-	rel={value.blank ? 'noopener noreferrer' : undefined}
+	target={value.href.blank ? '_blank' : '_self'}
+	rel={value.href.blank ? 'noopener noreferrer' : undefined}
 	class="text-primary hover:underline p-0"
 >
 	{@render children()}
